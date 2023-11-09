@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using System.Windows;
-using System.Windows.Media;
-using System.Windows.Media.Animation;
+﻿using System.Windows.Media;
 using System.Windows.Shapes;
 
 namespace N_Gewinnt
@@ -16,9 +8,6 @@ namespace N_Gewinnt
         public Ellipse ChipEllipse { get; set; }
         public int Column { get; set; }
         public int Row { get; set; }
-
-        public int paddingX = 20;
-        public int paddingY = 150;
 
         public Chip(int column)
         {
