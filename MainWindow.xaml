@@ -1,0 +1,13 @@
+﻿<Window x:Class="N_Gewinnt.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:N_Gewinnt"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="839" Width="1568" WindowStartupLocation="CenterScreen" WindowState="Maximized" KeyDown="Window_KeyDown">
+    <Canvas x:Name="Cvs">
+        <Label x:Name="label_player" Content="Spieler Rot ist dran" Canvas.Left="1281" Canvas.Top="30" FontSize="30"/>
+
+    </Canvas>
+</Window>
