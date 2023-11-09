@@ -193,7 +193,7 @@ namespace N_Gewinnt
                 }
                 targetRow = row;
             }
-
+            // foo
             int column = currentChip.Column;
             usedSpaces[column]++;
 
