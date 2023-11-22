@@ -1,4 +1,5 @@
 ﻿using System.Windows;
+using System.Windows.Controls.Primitives;
 
 namespace N_Gewinnt
 {
@@ -18,7 +19,7 @@ namespace N_Gewinnt
                 int.TryParse(txt_reihen.Text, out int reihen) &&
                 int.TryParse(txt_n.Text, out int n))
             {
-                if (spalten > 0 && reihen > 0 && n > 0)
+                if (spalten > 0 && reihen <=4 && reihen > 0 && n > 0)
                 {
                     DialogResult = true;
                 }

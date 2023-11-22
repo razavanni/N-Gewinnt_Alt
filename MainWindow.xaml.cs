@@ -17,6 +17,8 @@ namespace N_Gewinnt
         private Chip currentChip;
 
         private int n { get; set; }
+        public int cols { get; set; }
+        public int rows { get; set; }
         double paddingX = 20;
         double paddingY = 200;
         private bool isAnimating = false;
@@ -26,8 +28,6 @@ namespace N_Gewinnt
 
         private double boardheight = 0;
 
-        public int cols { get; set; }
-        public int rows { get; set; }
 
         public MainWindow()
         {
@@ -56,6 +56,7 @@ namespace N_Gewinnt
             }
         }
 
+        // Draw Chip ready
         private void DrawChip(double column, double cellWidth, int usedSpacesInColumn)
         {
             if (currentChip != null)
@@ -68,7 +69,6 @@ namespace N_Gewinnt
 
                 double chipX = column * cellWidth + (cellWidth - chipDiameter) / 2 + paddingX;
 
-                double chipY = usedSpacesInColumn * chipDiameter + paddingY; // Verwenden Sie usedSpacesInColumn
 
                 Canvas.SetLeft(currentChip.ChipEllipse, chipX);
                 Canvas.SetTop(currentChip.ChipEllipse, 0);
@@ -76,6 +76,7 @@ namespace N_Gewinnt
                 Cvs.Children.Add(currentChip.ChipEllipse);
             }
         }
+        // Draw Game Board
         private void DrawGameBoard(int columns, int rows)
         {
             double screenWidth = SystemParameters.PrimaryScreenWidth;
@@ -126,6 +127,7 @@ namespace N_Gewinnt
 
             Cvs.Children.Add(horizontalLine);
         }
+        // Window Key Down
         private void Window_KeyDown(object sender, System.Windows.Input.KeyEventArgs e)
         {
             if (currentChip != null)
@@ -144,12 +146,17 @@ namespace N_Gewinnt
                     }
                     else if (e.Key == Key.Down)
                     {
-                        isAnimating = true;
-                        MoveCurrentChipDown();
+                        int column = currentChip.Column;
+                        if (usedSpaces[column] < 4)
+                        {
+                            isAnimating = true;
+                            MoveCurrentChipDown();
+                        }
                     }
                 }
             }
         }
+        // Move left
         private void MoveCurrentChipLeft()
         {
             if (currentChip != null)
@@ -163,6 +170,7 @@ namespace N_Gewinnt
                 }
             }
         }
+        // Move Rigjt
         private void MoveCurrentChipRight()
         {
             if (currentChip != null)
@@ -176,6 +184,7 @@ namespace N_Gewinnt
                 }
             }
         }
+        // Move down
         private void MoveCurrentChipDown()
         {
             double screenHeight = SystemParameters.PrimaryScreenHeight * 0.7;
@@ -216,6 +225,7 @@ namespace N_Gewinnt
 
             currentChip.ChipEllipse.BeginAnimation(Canvas.TopProperty, animation);
         }
+        // New ball 
         private void NewBall()
         {
             currentChip = new Chip(0);
@@ -239,6 +249,7 @@ namespace N_Gewinnt
             DrawChip(column, cellWidth, 0); // Passen Sie die Methode an, um usedSpaces zu berücksichtigen
             isAnimating = false;
         }
+
 
     }
 }
