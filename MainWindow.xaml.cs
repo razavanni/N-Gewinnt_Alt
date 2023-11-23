@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.Numerics;
 using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
@@ -29,6 +30,8 @@ namespace N_Gewinnt
 
         private double boardheight = 0;
 
+        private int[,] playerPlace { get; set; }
+
 
         public MainWindow()
         {
@@ -46,9 +49,17 @@ namespace N_Gewinnt
 
                 DrawGameBoard(dlg.GetColumns(), dlg.GetRows());
                 usedSpaces = new int[cols];
+                playerPlace = new int[cols, rows];
                 foreach (int col in usedSpaces)
                 {
                     usedSpaces[col] = 0;
+                }
+                foreach (int row in playerPlace)
+                {
+                    foreach (int col in playerPlace)
+                    {
+                        playerPlace[col, row] = 0;
+                    }
                 }
             }
             else
@@ -148,7 +159,7 @@ namespace N_Gewinnt
                     else if (e.Key == Key.Down)
                     {
                         int column = currentChip.Column;
-                        if (usedSpaces[column] < 4)
+                        if (usedSpaces[column] < rows)
                         {
                             isAnimating = true;
                             MoveCurrentChipDown();
@@ -194,17 +205,19 @@ namespace N_Gewinnt
             int targetRow = 0;
 
 
-            for (int row = 0; row < rows; row++)
+            for (int roww = 0; roww < rows; roww++)
             {
-                double rowTop = paddingY + row * (screenHeight * 0.7) / rows;
+                double rowTop = paddingY + roww * (screenHeight * 0.7) / rows;
                 if (rowTop > Canvas.GetTop(currentChip.ChipEllipse))
                 {
                     break;
                 }
-                targetRow = row;
+                targetRow = roww;
             }
             // foo
             int column = currentChip.Column;
+            int row = currentChip.Row;
+            playerPlace[column, row] = currentPlayer;
             usedSpaces[column]++;
 
             DoubleAnimation animation = new DoubleAnimation
@@ -220,8 +233,9 @@ namespace N_Gewinnt
 
                 if (Canvas.GetTop(currentChip.ChipEllipse) >= screenHeight - chipHeight * usedSpaces[column])
                 {
+                    checkWin(currentPlayer);
                     NewBall();
-                    CheckForWinner(column, usedSpaces[column]);
+
                 }
             };
 
@@ -236,12 +250,15 @@ namespace N_Gewinnt
             {
                 currentChip.ChipEllipse.Fill = Brushes.Blue;
                 label_player.Content = "Spieler Blau ist dran";
+                playerPlace[currentChip.Column, currentChip.Row] = currentPlayer;
                 currentPlayer = 2;
+
             }
             else if (currentPlayer == 2)
             {
                 currentChip.ChipEllipse.Fill = Brushes.Red;
                 label_player.Content = "Spieler Rot ist dran";
+                playerPlace[currentChip.Column, currentChip.Row] = currentPlayer;
                 currentPlayer = 1;
             }
 
@@ -252,59 +269,50 @@ namespace N_Gewinnt
             isAnimating = false;
         }
 
-        private bool CheckForWinner(int column, int row)
+        private bool checkWin(int player)
         {
-            // Überprüfen Sie vertikal
-            if (CheckVertical(column, row))
+            for (int i = 0; i < cols; i++)
             {
-                MessageBox.Show($"Spieler {currentPlayer} hat gewonnen!");
-                return true;
+                bool rowWin = true;
+                for (int j = 0; j < n; j++)
+                {
+                    if (playerPlace[i, j] != player)
+                    {
+                        rowWin = false;
+                        break;
+                    }
+                }
+                if (rowWin)
+                {
+                    MessageBox.Show("Gewinn");
+                    return true;
+                }
+
             }
 
-            // Fügen Sie hier weitere Überprüfungen für horizontale und diagonale Gewinnbedingungen hinzu, wenn gewünscht.
+            for (int j = 0; j < rows; j++)
+            {
+                bool columnWin = true;
+                for (int i = 0; i < n; i++)
+                {
+                    if (playerPlace[i, j] != player)
+                    {
+                        columnWin = false;
+                        break;
+                    }
+                }
+                if (columnWin)
+                {
+                    MessageBox.Show("Gewinn");
+                    return true;
+                }
+            }
+
 
             return false;
         }
 
-        private bool CheckVertical(int column, int row)
-        {
-            int consecutiveChips = 1; // Zähler für aufeinanderfolgende Chips
-            Brush currentColor = currentChip.ChipEllipse.Fill;
 
-            // Überprüfen Sie nach oben
-            for (int i = row - 1; i >= 0; i--)
-            {
-                if (Cvs.Children.OfType<Ellipse>().Any(ellipse =>
-                    Canvas.GetLeft(ellipse) == Canvas.GetLeft(currentChip.ChipEllipse) &&
-                    Canvas.GetTop(ellipse) == paddingY + i * (boardheight / rows) - chipDia / 2 &&
-                    ellipse.Fill == currentColor))
-                {
-                    consecutiveChips++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            // Überprüfen Sie nach unten
-            for (int i = row + 1; i < rows; i++)
-            {
-                if (Cvs.Children.OfType<Ellipse>().Any(ellipse =>
-                    Canvas.GetLeft(ellipse) == Canvas.GetLeft(currentChip.ChipEllipse) &&
-                    Canvas.GetTop(ellipse) == paddingY + i * (boardheight / rows) - chipDia / 2 &&
-                    ellipse.Fill == currentColor))
-                {
-                    consecutiveChips++;
-                }
-                else
-                {
-                    break;
-                }
-            }
-
-            return consecutiveChips >= n; // Überprüfen Sie, ob die Anzahl der aufeinanderfolgenden Chips die Gewinnbedingung erfüllt.
-        }
-
+       
     }
 }
