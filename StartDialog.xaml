@@ -8,7 +8,7 @@
         Title="StartDialog" Height="198" Width="398" WindowStartupLocation="CenterScreen" Loaded="Window_Loaded">
     <Canvas>
         <TextBox x:Name="txt_spalten" Canvas.Left="18" TextWrapping="Wrap" Text="7" Canvas.Top="39" Width="100" HorizontalAlignment="Center" VerticalAlignment="Top" Height="36" GotFocus="txt_spalten_GotFocus"/>
-        <TextBox x:Name="txt_reihen" Canvas.Left="140" TextWrapping="Wrap" Text="6" Canvas.Top="39" Width="102" Height="36" HorizontalAlignment="Center" VerticalAlignment="Top" GotFocus="txt_reihen_GotFocus"/>
+        <TextBox x:Name="txt_reihen" Canvas.Left="140" TextWrapping="Wrap" Text="4" Canvas.Top="39" Width="102" Height="36" HorizontalAlignment="Center" VerticalAlignment="Top" GotFocus="txt_reihen_GotFocus"/>
         <TextBox x:Name="txt_n" Canvas.Left="258" TextWrapping="Wrap" Text="4" Canvas.Top="39" Width="102" Height="36" HorizontalAlignment="Center" VerticalAlignment="Top" GotFocus="txt_n_GotFocus"/>
         <Label Content="Spalten" Canvas.Left="18" Canvas.Top="13" HorizontalAlignment="Center" VerticalAlignment="Top"/>
         <Label Content="N" Canvas.Left="258" Canvas.Top="13" HorizontalAlignment="Left" VerticalAlignment="Top"/>
