@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows;
 using System.Windows.Automation.Peers;
 using System.Windows.Controls;
@@ -220,6 +221,7 @@ namespace N_Gewinnt
                 if (Canvas.GetTop(currentChip.ChipEllipse) >= screenHeight - chipHeight * usedSpaces[column])
                 {
                     NewBall();
+                    CheckForWinner(column, usedSpaces[column]);
                 }
             };
 
@@ -250,6 +252,59 @@ namespace N_Gewinnt
             isAnimating = false;
         }
 
+        private bool CheckForWinner(int column, int row)
+        {
+            // Überprüfen Sie vertikal
+            if (CheckVertical(column, row))
+            {
+                MessageBox.Show($"Spieler {currentPlayer} hat gewonnen!");
+                return true;
+            }
+
+            // Fügen Sie hier weitere Überprüfungen für horizontale und diagonale Gewinnbedingungen hinzu, wenn gewünscht.
+
+            return false;
+        }
+
+        private bool CheckVertical(int column, int row)
+        {
+            int consecutiveChips = 1; // Zähler für aufeinanderfolgende Chips
+            Brush currentColor = currentChip.ChipEllipse.Fill;
+
+            // Überprüfen Sie nach oben
+            for (int i = row - 1; i >= 0; i--)
+            {
+                if (Cvs.Children.OfType<Ellipse>().Any(ellipse =>
+                    Canvas.GetLeft(ellipse) == Canvas.GetLeft(currentChip.ChipEllipse) &&
+                    Canvas.GetTop(ellipse) == paddingY + i * (boardheight / rows) - chipDia / 2 &&
+                    ellipse.Fill == currentColor))
+                {
+                    consecutiveChips++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            // Überprüfen Sie nach unten
+            for (int i = row + 1; i < rows; i++)
+            {
+                if (Cvs.Children.OfType<Ellipse>().Any(ellipse =>
+                    Canvas.GetLeft(ellipse) == Canvas.GetLeft(currentChip.ChipEllipse) &&
+                    Canvas.GetTop(ellipse) == paddingY + i * (boardheight / rows) - chipDia / 2 &&
+                    ellipse.Fill == currentColor))
+                {
+                    consecutiveChips++;
+                }
+                else
+                {
+                    break;
+                }
+            }
+
+            return consecutiveChips >= n; // Überprüfen Sie, ob die Anzahl der aufeinanderfolgenden Chips die Gewinnbedingung erfüllt.
+        }
 
     }
 }
